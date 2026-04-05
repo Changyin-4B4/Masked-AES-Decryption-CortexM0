@@ -151,7 +151,7 @@ for reproduction.
 与掩码方案无关，猜测这是观察到泄漏的主要原因。
 建议复现时使用汉明重量相同的输入进行 Fixed-vs-Fixed 测试。
 
-Comparison plots: `test/overlay_compare_output/`
+Comparison plots: `test/fvf_group_0_vs_group_1.png`, `test/fvf_group_0_vs_group_2.png`, `test/fvf_group_1_vs_group_2.png`
 
 ### CPA (5,000 traces, random input)
 
@@ -160,7 +160,7 @@ No key byte with statistically significant correlation was found.
 
 针对随机输入迹线进行了单 bit CPA 攻击，未能找到具有显著相关性的密钥字节。
 
-CPA plots: `test/cpa_output/`
+CPA plots: `test/cpa_attack_result_bit.png`
 
 ---
 
