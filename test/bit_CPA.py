@@ -58,7 +58,7 @@ def parse_args():
     parser.add_argument("--target-bit", type=int, default=2, help="攻击的目标 bit 序号，范围 0-7")
     parser.add_argument(
         "--output",
-        default=r"h:\python_programme\VISION_AES\cpa_attack_result_bit.png",
+        default=r"",
         help="输出图路径"
     )
     return parser.parse_args()
