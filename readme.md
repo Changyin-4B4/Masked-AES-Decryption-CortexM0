@@ -23,7 +23,7 @@ C 语言实现在编译器优化下难以保证掩码方案的安全性不被破
 
 **Algorithm / 算法:** AES-128 Decryption / AES-128 解密
 
-**Cycle count / 指令周期:** 26,801 cycles
+**Cycle count / 指令周期:** ~27k cycles
 
 **Masking / 掩码方案:** First-order Boolean masking / 一阶布尔掩码
 
@@ -62,12 +62,10 @@ Based on the circuit from:
 
 > Boyar, J., & Peralta, R. (2012). A small depth-16 circuit for the AES S-box.
 
-Manual instruction scheduling was applied under Cortex-M0 register constraints
-to minimize cycle count and avoid Hamming-distance leakage on the bus.
+Manual instruction scheduling was applied under Cortex-M0 register constraints to minimize cycle count.
 ISW multiplication is used for all AND gates in the masked circuit.
 
-基于 Boyar-Peralta 的论文电路，在 Cortex-M0 寄存器约束下进行了手动指令调度，
-压缩指令周期并避免总线上的汉明距离泄漏。
+基于 Boyar-Peralta 的论文电路，在 Cortex-M0 寄存器约束下进行了手动指令调度，以压缩指令周期。
 电路中所有 AND 门均使用 ISW 乘法实现掩码。
 
 ### InvMixColumns
@@ -106,65 +104,29 @@ See `prng_verify.py` for statistical quality verification.
 Callers may substitute any entropy source that satisfies the interface
 documented in `aes_usage_example.c`.
 
+> **Warning:** The reference PRNG implementation **completely fails** all
+> three NIST SP 800-22 statistical tests (Approximate Entropy, Serial,
+> and Maurer's Universal). The security implications of this are discussed
+> in [`v1_details.md`](v1_details.md) and [`v2_details.md`](v2_details.md).
+> A higher-quality and more efficient entropy strategy is left as future work.
+
+---
+
 参考随机数方案见 `prng_reference.c`，统计质量验证脚本见 `prng_verify.py`。
 调用方可替换为任何满足 `aes_usage_example.c` 中接口约定的熵源。
+
+> **警告：** 参考随机数实现在 NIST SP 800-22 统计测试（近似熵、序列检验、
+> Maurer 通用检验）中**全部未通过**。其对实现安全性的影响详见
+> [`v1_details.md`](v1_details.md) 与 [`v2_details.md`](v2_details.md)。
+> 更优质且高效的随机数策略暂时无暇考虑，留待后续完善。
 
 ---
 
 ## Security Evaluation / 安全性评估
 
-Traces were collected on a physical STM32F051 board.
-All analysis scripts are in the `test/` directory (no inline comments).
+For security evaluation details, see [v1_details.md](v1_details.md) and [v2_details.md](v2_details.md).
 
-迹线采集于实际 STM32F051 硬件。所有分析脚本见 `test/` 目录（无内联注释）。
-
-### Fixed-vs-Random TVLA (5,000 traces, random input)
-
-Intermediate targets analyzed: ciphertext, InvSubBytes output for rounds 10–1,
-and plaintext, across all 16 bytes.
-
-分析目标：密文、第 10 至第 1 轮 InvSubBytes 输出、明文，覆盖全部 16 字节。
-
-| Stage / 阶段         | Result / 结果                                   |
-| -------------------- | ----------------------------------------------- |
-| Ciphertext (ct)      | ✓ Pass                                         |
-| invsb_r10 ~ invsb_r2 | ✓ Pass — no statistically significant leakage |
-| invsb_r1 / plaintext | ✗ Fail (sample ~73,000 onward)                 |
-
-The leakage at invsb_r1 and plaintext is expected and theoretically unavoidable:
-both correspond to the unmasking boundary where the final state is written out
-in unmasked form. Since invsb_r1 and plaintext differ only by a constant round
-key XOR, their TVLA curves are identical — they represent the same physical
-operation. This leakage does not enable key recovery.
-
-invsb_r1 和 plaintext 的泄漏是理论必然的端点泄漏（endpoint leakage）：
-两者对应去掩码边界，最终状态以非掩码形式写出。由于两者仅相差一个固定轮密钥的
-异或，TVLA 曲线完全一致，本质上是同一操作的两种视角。此泄漏不能用于恢复密钥。
-
-Detailed results: `tlva_all_bytes_summary.csv`
-
-### Fixed-vs-Fixed TVLA (1,500 × 3 traces, fixed input)
-
-The three fixed input groups have different Hamming weights (HW = 59 / 65 / 71),
-which introduces a systematic power baseline difference unrelated to the masking
-scheme. This is believed to be the primary cause of the observed leakage.
-A corrected evaluation using inputs with identical Hamming weight is recommended
-for reproduction.
-
-三组固定输入的汉明重量不同（HW = 59 / 65 / 71），导致功耗基线存在系统性差异，
-与掩码方案无关，猜测这是观察到泄漏的主要原因。
-建议复现时使用汉明重量相同的输入进行 Fixed-vs-Fixed 测试。
-
-Comparison plots: `test/fvf_group_0_vs_group_1.png`, `test/fvf_group_0_vs_group_2.png`, `test/fvf_group_1_vs_group_2.png`
-
-### CPA (5,000 traces, random input)
-
-Single-bit CPA was performed against the random-input traces.
-No key byte with statistically significant correlation was found.
-
-针对随机输入迹线进行了单 bit CPA 攻击，未能找到具有显著相关性的密钥字节。
-
-CPA plots: `test/cpa_attack_result_bit.png`
+有关安全性评估的详细内容，参见 [v1_details.md](v1_details.md) 与 [v2_details.md](v2_details.md)。
 
 ---
 

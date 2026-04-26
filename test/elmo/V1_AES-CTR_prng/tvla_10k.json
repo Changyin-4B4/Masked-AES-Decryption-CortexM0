@@ -1,0 +1,62 @@
+{
+  "random_dir": "/root/work/python-elmo-local/elmo/elmo-tool/output/traces",
+  "fixed_dir": "/root/work/python-elmo-local/elmo/elmo-tool-fix/output/traces",
+  "num_traces_per_group": 10000,
+  "offset": 0,
+  "trace_length": 26451,
+  "threshold": 4.5,
+  "mean_level": {
+    "max_abs_t": 301.77766978883085,
+    "argmax": 5117,
+    "exceed_count": 2477,
+    "first_20_exceed_indexes": [
+      0,
+      1,
+      11,
+      12,
+      82,
+      83,
+      84,
+      85,
+      1506,
+      1520,
+      1523,
+      1524,
+      1525,
+      1526,
+      1527,
+      1528,
+      1544,
+      1547,
+      1548,
+      1549
+    ]
+  },
+  "variance_level": {
+    "max_abs_t": 73.77571676055808,
+    "argmax": 26428,
+    "exceed_count": 2178,
+    "first_20_exceed_indexes": [
+      82,
+      83,
+      84,
+      85,
+      1503,
+      1518,
+      1520,
+      1521,
+      1525,
+      1526,
+      1545,
+      1549,
+      1550,
+      1551,
+      1575,
+      1594,
+      1595,
+      1599,
+      1601,
+      1604
+    ]
+  }
+}

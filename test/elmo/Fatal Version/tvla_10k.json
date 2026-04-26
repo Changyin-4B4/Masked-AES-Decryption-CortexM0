@@ -1,0 +1,63 @@
+{
+  "random_dir": "/root/work/python-elmo-local/test_output/output_ultra_old/traces",
+  "fixed_dir": "/root/work/python-elmo-local/test_output/output_ultra_old_fix/traces",
+  "num_traces_per_group": 10000,
+  "offset": 0,
+  "trace_length": 25975,
+  "threshold": 4.5,
+  "output_prefix": "/root/work/python-elmo-local/test_output/output_ultra_old/traces/tvla_10k",
+  "mean_level": {
+    "max_abs_t": Infinity,
+    "argmax": 0,
+    "exceed_count": 110,
+    "first_20_exceed_indexes": [
+      0,
+      1,
+      12,
+      13,
+      76,
+      77,
+      78,
+      79,
+      156,
+      157,
+      164,
+      165,
+      252,
+      253,
+      260,
+      261,
+      348,
+      349,
+      356,
+      357
+    ]
+  },
+  "variance_level": {
+    "max_abs_t": 74.71263425711012,
+    "argmax": 12,
+    "exceed_count": 5917,
+    "first_20_exceed_indexes": [
+      12,
+      13,
+      76,
+      77,
+      78,
+      79,
+      116,
+      117,
+      264,
+      265,
+      448,
+      449,
+      500,
+      501,
+      508,
+      509,
+      546,
+      547,
+      550,
+      551
+    ]
+  }
+}
